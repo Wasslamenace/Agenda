@@ -1,69 +1,77 @@
 package agenda;
 
 import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+
 
 public class Event {
 
-    /**
-     * The myTitle of this event
-     */
-    private String myTitle;
+    private String leTitre;
+    private LocalDateTime leDebut;
+    private Duration laDuree;
+    private ArrayList<LocalDateTime> lesjoursEvent = new ArrayList<>();
+    protected boolean isInDay = false;
+    private LocalDateTime laFin;
+
+
     
-    /**
-     * The starting time of the event
-     */
-    private LocalDateTime myStart;
-
-    /**
-     * The durarion of the event 
-     */
-    private Duration myDuration;
-
-
-    /**
-     * Constructs an event
-     *
-     * @param title the title of this event
-     * @param start the start time of this event
-     * @param duration the duration of this event
-     */
-    public Event(String title, LocalDateTime start, Duration duration) {
-        this.myTitle = title;
-        this.myStart = start;
-        this.myDuration = duration;
+    public Event(String titre, LocalDateTime debut, Duration duree) {
+        this.leTitre = titre;
+        this.leDebut = debut;
+        this.laDuree = duree;
     }
 
-    /**
-     * Tests if an event occurs on a given day
-     *
-     * @param aDay the day to test
-     * @return true if the event occurs on that day, false otherwise
-     */
+   
     public boolean isInDay(LocalDate aDay) {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        
+       
+        int jourDebut = this.leDebut.getDayOfMonth();
+        int jourFin = this.getEnd().getDayOfMonth();
+        int difference = jourFin - jourDebut;
+        
+       
+        this.lesjoursEvent.add(this.leDebut);
+        
+        
+        for (int i = 1; i <= difference; i++) {
+            this.lesjoursEvent.add(this.leDebut.plus(i, ChronoUnit.DAYS));
+            System.out.println(this.lesjoursEvent);
+        }
+        
+        
+        this.lesjoursEvent.forEach(event -> {
+            if (event.toLocalDate().equals(aDay)) {
+                this.isInDay = true;
+            }
+        });
+        return this.isInDay;
+        
     }
    
-    /**
-     * @return the myTitle
-     */
-    public String getTitle() {
-        return myTitle;
+   
+    public String getleTitre() {
+        return leTitre;
     }
 
-    /**
-     * @return the myStart
-     */
-    public LocalDateTime getStart() {
-        return myStart;
+   
+    public LocalDateTime getleDebut() {
+        return leDebut;
     }
 
-
-    /**
-     * @return the myDuration
-     */
+    
+    public LocalDateTime getEnd(){
+        this.laFin = this.leDebut.plus(this.laDuree.toMinutes(), ChronoUnit.MINUTES);
+        return this.laFin;
+    }
+   
     public Duration getDuration() {
-        return myDuration;
+        return laDuree;
+    }
+    
+    @Override
+    public String toString(){
+        return this.leTitre;
     }
 
    
